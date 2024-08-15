@@ -1,0 +1,26 @@
+{
+  "name": "autotob",
+  "version": "0.0.0",
+  "type": "module",
+  "homepage": "https://arcasias.github.io/AutoTOB/",
+  "scripts": {
+    "dev": "npx vite",
+    "build": "npx vite build",
+    "preview": "npx vite preview",
+    "check": "npx svelte-check --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
+    "deploy": "npx gh-pages -d dist"
+  },
+  "devDependencies": {
+    "@types/pdfjs-dist": "^2.10.378",
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@tsconfig/svelte": "^5.0.4",
+    "gh-pages": "^6.1.1",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.5.136",
+    "svelte": "^4.2.18",
+    "svelte-check": "^3.8.5",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1"
+  }
+}
