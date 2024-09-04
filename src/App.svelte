@@ -1,10 +1,11 @@
 <script lang="ts">
   import FileInput from "./lib/FileInput.svelte";
   import { ReportProcessor } from "./lib/ReportProcessor";
-  import { sep } from "./lib/utils";
+  import { nationalNumberValidator, sep } from "./lib/utils";
 
   const updateStorage = () => {
     localStorage.setItem("full-name", fullName || "");
+    localStorage.setItem("national-number", nationalNumber || "");
   };
 
   const onSubmit = async (ev: SubmitEvent) => {
@@ -20,6 +21,7 @@
         preview: ev.submitter?.id === "preview",
         send: ev.submitter?.id === "send",
       });
+      nationalNumberValidator(nationalNumber);
     } catch (err) {
       errors = [err instanceof Error ? err : new Error(String(err))];
     }
@@ -30,6 +32,7 @@
   let errors: Error[] = [];
   let fullName = localStorage.getItem("full-name") || "";
   let lastProcessor: ReportProcessor;
+  let nationalNumber = localStorage.getItem("national-number") || "";
 </script>
 
 <main>
@@ -81,6 +84,15 @@
           on:input={updateStorage}
         />
       </label>
+      <label>
+        National Number:
+        <input
+          type="text"
+          placeholder="National Number"
+          bind:value={nationalNumber}
+          on:input={updateStorage}
+        />
+      </label>
     </div>
     <div class="actions">
       <button id="preview">Preview</button>
@@ -98,6 +110,7 @@
         </p>
         <p>IBAN: <strong>BE39 6792 0022 9319</strong></p>
         <p>BIC: <strong>PCHQ BE BB</strong></p>
+        <p>Reference: TOB - {nationalNumber} - {lastProcessor.months}/{lastProcessor.year}</p>
       </div>
     {/if}
   </form>
