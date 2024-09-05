@@ -2,7 +2,7 @@ import { PDFDocument, PDFPage } from "pdf-lib";
 import * as pdfJS from "pdfjs-dist";
 
 import pdfJSWorkerURL from "pdfjs-dist/build/pdf.worker?url";
-import { sep } from "./utils";
+import { sep, storageGet } from "./utils";
 
 interface TaxValues {
   transactions: number;
@@ -82,6 +82,7 @@ export class ReportProcessor {
   pdfPages: PDFPage[] = [];
 
   fileName = "";
+  reference = "";
   reportFiles: File[] = [];
   templateFile: File;
 
@@ -137,12 +138,15 @@ export class ReportProcessor {
     this._writeText(new Date().toLocaleDateString(), "date");
 
     this.fileName = `TOB_2024_${getMonthIndex(this.months[0])}`;
-    let subjectMonths = this._getMonth(0);
+    let monthLabel = this._getMonth(0);
     if (this.months[1]) {
       this.fileName += `_${getMonthIndex(this.months[1])}`;
-      subjectMonths += ` - ${this._getMonth(1)}`;
+      monthLabel += ` - ${this._getMonth(1)}`;
     }
     this.fileName += ".pdf";
+    this.reference = `TOB/${storageGet("national-number")}/${monthLabel} ${
+      this.year
+    }`;
 
     console.log("\nSuccessfully generated:", this.fileName);
     console.log("\nTotal tax amount:", this.total, "EUR\n");
@@ -156,8 +160,8 @@ export class ReportProcessor {
     download(this.fileName, pdfBlob);
 
     if (options?.send) {
-      const fullName = localStorage.getItem("full-name");
-      const subject = `TOB ${subjectMonths} ${this.year}`;
+      const fullName = storageGet("full-name");
+      const subject = `TOB ${monthLabel} ${this.year}`;
       window.open(
         `mailto:${TARGET_EMAIL}?subject=${
           fullName ? `${fullName} / ` : ""

@@ -33,7 +33,9 @@
 <button
   type="button"
   id="template-dropzone"
-  class="dropzone {dragging ? 'dragging' : ''}"
+  class="h-72 flex flex-col items-center justify-center rounded-lg border-4 border-pink-500 transition-colors flex-1 relative p-8 {dragging
+    ? 'bg-slate-100'
+    : 'hover:bg-slate-100'}"
   on:click={() => input.click()}
   on:dragover|preventDefault
   on:dragenter={onDragEnter}
@@ -41,70 +43,30 @@
   on:drop|preventDefault={onDrop}
 >
   {#if dragging}
-    <div class="drophandle">DROP YOUR FILES HERE</div>
+    <div
+      class="absolute pointer-events-none flex items-center justify-center bg-opacity-80 top-0 left-0 w-full h-full bg-white"
+    >
+      <strong class="text-xl">DROP YOUR FILES HERE</strong>
+    </div>
   {/if}
   <slot />
   <input
     bind:this={input}
     {name}
     type="file"
+    class="w-px h-px"
     accept="application/pdf"
     required
     {multiple}
     on:change={onChange}
   />
   {#if names.length}
-    <ul>
+    <ul class="pointer-events-none text-black">
       {#each names as name}
         <li>{name}</li>
       {/each}
     </ul>
+  {:else}
+    <p class="text-gray-400 italic">Upload or drop files</p>
   {/if}
 </button>
-
-<style>
-  button {
-    height: 300px;
-    flex: 1;
-    position: relative;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.5rem;
-    border: 0.25rem var(--primary) solid;
-    color: var(--primary);
-    transition: 0.15s;
-  }
-
-  button.dragging,
-  button:hover {
-    background-color: #ff008020;
-  }
-
-  input[type="file"] {
-    width: 1px;
-    height: 1px;
-  }
-
-  ul {
-    pointer-events: none;
-    color: black;
-  }
-
-  .drophandle {
-    position: absolute;
-    pointer-events: none;
-    top: 0;
-    font-size: 24pt;
-    font-weight: bold;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-</style>

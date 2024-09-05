@@ -1,66 +1,13 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  --primary: #ff0080;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-}
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 button:active {
   transform: translateY(1px);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-button {
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-}
-
-input[type="file"] {
-  cursor: inherit;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-p,
-summary {
-  margin: 0;
-}
-
-ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-#app {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .mb-1 {
   margin-bottom: 0.5rem;
-}
-
-.text-primary {
-  color: var(--primary);
 }
 
 @media (prefers-color-scheme: light) {
