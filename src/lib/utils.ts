@@ -41,3 +41,61 @@ export const nationalNumberValidator = (number: string) => {
         throw new Error("Invalid belgium national number");
     }
 }
+
+function stripIndent(strings: TemplateStringsArray, ...values: any[]): string {
+    // Combine the strings and values into a single string
+    let fullString = strings.reduce((result, str, i) => result + values[i - 1] + str);
+
+    // Find the minimum indentation level
+    const match = fullString.match(/^[ \t]*(?=\S)/gm);
+    if (match == null) {
+        return fullString;
+    }
+    const indent = Math.min(...match.map(el => el.length));
+
+    // Remove the common indentation
+    const regex = new RegExp(`^[ \\t]{${indent}}`, 'gm');
+    return indent > 0 ? fullString.replace(regex, '') : fullString;
+}
+
+export const getQrCodeText = (name: string, message: string, iban: string, bic: string, amount: number) => {
+    if (!name) {
+        throw new Error('Name of receiver must be set')
+    }
+
+    if (!message) {
+        throw new Error('Message must be set')
+    }
+    if (message.length > 140) {
+        throw new Error('Message must not be longer than 140 characters')
+    }
+
+    if (!iban) {
+        throw new Error('IBAN must be set')
+    }
+    if (iban.length < 15 || iban.length > 34) {
+        throw new Error('IBAN must be between 15 and 34 characters long')
+    }
+
+    if (amount <= 0) {
+        throw new Error('Amount must be a positive number')
+    }
+
+    return stripIndent`
+    BCD
+    002
+    1
+    SCT
+    ${// BIC needs to be set for some apps,
+      // even though it is overwritten by the IBAN anyways.
+        bic || 'AAAAAAAAAAA'
+    }
+    ${name}
+    ${iban}
+    EUR${amount}
+    ${/* Unused field "purpose" */ ''}
+    ${/* Unused field "reference" */ ''}
+    ${message}
+    ${/* Unused field "note to user" */ ''}
+  `
+}

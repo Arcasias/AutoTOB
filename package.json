@@ -12,11 +12,13 @@
   },
   "devDependencies": {
     "@types/pdfjs-dist": "^2.10.378",
+    "@types/qrcode": "^1.5.5",
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@tsconfig/svelte": "^5.0.4",
     "gh-pages": "^6.1.1",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.5.136",
+    "qrcode": "^1.5.4",
     "svelte": "^4.2.18",
     "svelte-check": "^3.8.5",
     "tslib": "^2.6.3",

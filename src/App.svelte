@@ -1,7 +1,8 @@
 <script lang="ts">
+  import QRCode from "qrcode";
   import FileInput from "./lib/FileInput.svelte";
   import { ReportProcessor } from "./lib/ReportProcessor";
-  import { nationalNumberValidator, sep } from "./lib/utils";
+  import {getQrCodeText, nationalNumberValidator, sep} from "./lib/utils";
 
   const updateStorage = () => {
     localStorage.setItem("full-name", fullName || "");
@@ -22,6 +23,14 @@
         send: ev.submitter?.id === "send",
       });
       nationalNumberValidator(nationalNumber);
+      const qrCodeText = getQrCodeText(
+              "Centre de perception - section taxes diverses",
+              `TOB - ${nationalNumber} - ${lastProcessor.months.join("-")}/${lastProcessor.year}`,
+              "BE39679200229319",
+              "PCHQBEBB",
+              lastProcessor.total
+      );
+      await QRCode.toCanvas(document.getElementById('canvas'), qrCodeText);
     } catch (err) {
       errors = [err instanceof Error ? err : new Error(String(err))];
     }
@@ -110,7 +119,8 @@
         </p>
         <p>IBAN: <strong>BE39 6792 0022 9319</strong></p>
         <p>BIC: <strong>PCHQ BE BB</strong></p>
-        <p>Reference: TOB - {nationalNumber} - {lastProcessor.months}/{lastProcessor.year}</p>
+        <p>Reference: TOB - {nationalNumber} - {lastProcessor.months.join("-")}/{lastProcessor.year}</p>
+        <canvas id="canvas"></canvas>
       </div>
     {/if}
   </form>
