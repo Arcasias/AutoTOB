@@ -4,8 +4,10 @@ export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
 
   theme: {
-    extend: {}
+    extend: {},
   },
 
-  plugins: [require("@tailwindcss/typography")]
+  darkMode: "selector",
+
+  plugins: [require("@tailwindcss/typography")],
 } as Config;

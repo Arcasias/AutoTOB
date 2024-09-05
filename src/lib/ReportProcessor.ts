@@ -26,6 +26,7 @@ const getMonthIndex = (month: string) =>
   String(Object.keys(MONTHS).indexOf(month) + 1).padStart(2, "0");
 
 const TARGET_EMAIL = "CPIC.TAXDIV@minfin.fed.be";
+/** { label: [page, x, y] } */
 const COORDINATES: Record<string, [number, number, number]> = {
   month_first: [0, 260, 678],
   month_second: [0, 365, 678],
@@ -141,12 +142,14 @@ export class ReportProcessor {
     let monthLabel = this._getMonth(0);
     if (this.months[1]) {
       this.fileName += `_${getMonthIndex(this.months[1])}`;
-      monthLabel += ` - ${this._getMonth(1)}`;
+      monthLabel += `/${this._getMonth(1)}`;
     }
+
+    const nationalNumber = storageGet("national-number");
     this.fileName += ".pdf";
-    this.reference = `TOB/${storageGet("national-number")}/${monthLabel} ${
-      this.year
-    }`;
+    this.reference = nationalNumber
+      ? `TOB - ${nationalNumber} - ${monthLabel} ${this.year}`
+      : "";
 
     console.log("\nSuccessfully generated:", this.fileName);
     console.log("\nTotal tax amount:", this.total, "EUR\n");
