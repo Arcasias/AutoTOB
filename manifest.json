@@ -1,0 +1,10 @@
+{
+  "name": "AutoTOB",
+  "short_name": "AutoTOB",
+  "description": "A tool to auto-complete TOB reports",
+  "display": "standalone",
+  "theme_color": "#a855f7",
+  "background_color": "#a855f7",
+  "scope": "/",
+  "start_url": "/"
+}
