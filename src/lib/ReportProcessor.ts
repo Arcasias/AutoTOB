@@ -30,13 +30,14 @@ const TARGET_EMAIL = "CPIC.TAXDIV@minfin.fed.be";
 const COORDINATES: Record<string, [number, number, number]> = {
   month_first: [0, 260, 678],
   month_second: [0, 365, 678],
-  t12_transactions: [0, 228, 488],
-  t12_basis: [0, 273, 488],
-  t12_amount: [0, 405, 488],
-  t35_transactions: [0, 228, 465],
-  t35_basis: [0, 273, 465],
-  t35_amount: [0, 405, 465],
-  t_total: [1, 314, 460],
+  no_thresh_12_transactions: [0, 228, 488],
+  no_thresh_12_basis: [0, 273, 488],
+  no_thresh_12_amount: [0, 405, 488],
+  no_thresh_35_transactions: [0, 228, 465],
+  no_thresh_35_basis: [0, 273, 465],
+  no_thresh_35_amount: [0, 405, 465],
+  no_thresh_total: [0, 405, 394],
+  total: [1, 314, 460],
   date: [1, 250, 312],
 };
 
@@ -59,8 +60,8 @@ const R_MONTH = new RegExp(
   `((${Object.keys(MONTHS).join("|")})\\s*(\\d+))`,
   "i"
 );
-const R_PAGE_T12 = /0[,.]12%/;
-const R_PAGE_T35 = /0[,.]35%/;
+const R_PAGE_NO_THRESH_12 = /0[,.]12%/;
+const R_PAGE_NO_THRESH_35 = /0[,.]35%/;
 
 const R_TRANSACTIONS = /total transactions/i;
 const R_AMOUNT = /total tax amount/i;
@@ -121,19 +122,20 @@ export class ReportProcessor {
     if (this.t12Values.transactions) {
       console.log("Transactions taxed at 0.12%");
       console.table(this.t12Values);
-      this._writeText(this.t12Values.transactions, "t12_transactions");
-      this._writeAmount(this.t12Values.basis, "t12_basis");
-      this._writeAmount(this.t12Values.amount, "t12_amount");
+      this._writeText(this.t12Values.transactions, "no_thresh_12_transactions");
+      this._writeAmount(this.t12Values.basis, "no_thresh_12_basis");
+      this._writeAmount(this.t12Values.amount, "no_thresh_12_amount");
     }
     if (this.t35Values.transactions) {
       console.log("Transactions taxed at 0.35%");
       console.table(this.t35Values);
-      this._writeText(this.t35Values.transactions, "t35_transactions");
-      this._writeAmount(this.t35Values.basis, "t35_basis");
-      this._writeAmount(this.t35Values.amount, "t35_amount");
+      this._writeText(this.t35Values.transactions, "no_thresh_35_transactions");
+      this._writeAmount(this.t35Values.basis, "no_thresh_35_basis");
+      this._writeAmount(this.t35Values.amount, "no_thresh_35_amount");
     }
     if (this.total) {
-      this._writeAmount(this.total, "t_total");
+      this._writeAmount(this.total, "no_thresh_total");
+      this._writeAmount(this.total, "total");
     }
 
     this._writeText(new Date().toLocaleDateString(), "date");
@@ -234,9 +236,9 @@ export class ReportProcessor {
         continue;
       }
 
-      if (R_PAGE_T12.test(lineContent)) {
+      if (R_PAGE_NO_THRESH_12.test(lineContent)) {
         targetvalues = this.t12Values;
-      } else if (R_PAGE_T35.test(lineContent)) {
+      } else if (R_PAGE_NO_THRESH_35.test(lineContent)) {
         targetvalues = this.t35Values;
       } else if (R_TRANSACTIONS.test(lineContent)) {
         onNextValue = (value) => (targetvalues.transactions += value);
